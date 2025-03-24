@@ -12,6 +12,11 @@ internal static class Program
         "374DE290-123F-4565-9164-39C4925E467B");
 
     /// <summary>
+    /// The version of this app.
+    /// </summary>
+    private const string Version = "1.1.0";
+
+    /// <summary>
     /// Retrieves the file system path of a known folder identified by its GUID, such as the
     /// Downloads folder.
     /// This method utilises the Windows Shell API to obtain the current user's folder path, even
@@ -67,8 +72,43 @@ internal static class Program
         }
     }
 
+    /// <summary>
+    /// Show application usage.
+    /// </summary>
+    private static void ShowHelp()
+    {
+        Console.WriteLine("SpotlightWallpaperCopier - Copies Windows Spotlight wallpaper to Downloads folder");
+        Console.WriteLine();
+        Console.WriteLine("Usage: SpotlightWallpaperCopier [options]");
+        Console.WriteLine();
+        Console.WriteLine("Options:");
+        Console.WriteLine("  -n, --dst-file-name <name>    Set destination filename (default: UntitledWallpaper)");
+        Console.WriteLine("  -h, --help                    Display this help message");
+        Console.WriteLine("  -v, --version                 Show programme version");
+        Console.WriteLine();
+        Console.WriteLine("Examples:");
+        Console.WriteLine("  SpotlightWallpaperCopier");
+        Console.WriteLine("  SpotlightWallpaperCopier --dst-file-name MyWallpaper");
+    }
+
     static void Main(string[] args)
     {
+        // Check for help or version flags first
+        if (args.Length > 0)
+        {
+            switch (args[0])
+            {
+                case "--help":
+                case "-h":
+                    ShowHelp();
+                    return;
+                case "--version":
+                case "-v":
+                    Console.WriteLine($"SpotlightWallpaperCopier version {Version}");
+                    return;
+            }
+        }
+
         // default destination file name
         var destFileName = "UntitledWallpaper";
 
@@ -77,7 +117,7 @@ internal static class Program
         {
             if ((args[i] != "--dst-file-name" && args[i] != "-n") || i + 1 >= args.Length) continue;
             destFileName = args[i + 1];
-            i++; // skip the next argument
+            i++;
         }
 
         var userName = Environment.UserName;
